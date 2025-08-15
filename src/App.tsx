@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import './App.css';
 
@@ -17,7 +17,9 @@ const FullPagePhoto = React.forwardRef((props: any, ref: any) => {
     <div className="page" ref={ref}>
       <div className="page-content full-photo">
         <div className="photo-container">
-          <img src={props.photoSrc} alt={props.alt} />
+          <img src={props.photoSrc} alt={props.alt} onError={(e) => {
+            e.target.src = `https://picsum.photos/500/700?random=${Math.floor(Math.random() * 1000)}`;
+          }} />
         </div>
         <div className="photo-text">
           <h3>{props.title}</h3>
@@ -36,7 +38,9 @@ const PhotoGrid = React.forwardRef((props: any, ref: any) => {
         <div className="grid-container">
           {props.photos.map((photo: any, index: number) => (
             <div key={index} className="grid-photo">
-              <img src={photo.src} alt={photo.alt} />
+              <img src={photo.src} alt={photo.alt} onError={(e) => {
+                e.target.src = `https://picsum.photos/250/250?random=${Math.floor(Math.random() * 1000) + index}`;
+              }} />
             </div>
           ))}
         </div>
@@ -61,10 +65,152 @@ const TextPage = React.forwardRef((props: any, ref: any) => {
   );
 });
 
+// Interactive Elements
+const QuizPage = React.forwardRef((props: any, ref: any) => {
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  
+  const handleAnswer = (answer: string) => {
+    setSelectedAnswer(answer);
+    setShowResult(true);
+  };
+  
+  return (
+    <div className="page" ref={ref}>
+      <div className="page-content quiz-page">
+        <h3>🎯 History Quiz!</h3>
+        <p>What happened on August 15th, 1945?</p>
+        <div className="quiz-options">
+          <button 
+            onClick={() => handleAnswer('a')}
+            className={selectedAnswer === 'a' ? 'selected' : ''}
+          >
+            A) World War I ended
+          </button>
+          <button 
+            onClick={() => handleAnswer('b')}
+            className={selectedAnswer === 'b' ? 'selected' : ''}
+          >
+            B) World War II ended in Pacific
+          </button>
+          <button 
+            onClick={() => handleAnswer('c')}
+            className={selectedAnswer === 'c' ? 'selected' : ''}
+          >
+            C) Moon landing
+          </button>
+        </div>
+        {showResult && (
+          <div className={`quiz-result ${selectedAnswer === 'b' ? 'correct' : 'incorrect'}`}>
+            {selectedAnswer === 'b' ? '✅ Correct! Japan surrendered, ending WWII in the Pacific!' : '❌ Try again! The answer is B.'}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
+
+const HiddenObjectPage = React.forwardRef((props: any, ref: any) => {
+  const [foundItems, setFoundItems] = useState([]);
+  
+  const handleFindItem = (item: string) => {
+    if (!foundItems.includes(item)) {
+      setFoundItems([...foundItems, item]);
+    }
+  };
+  
+  return (
+    <div className="page" ref={ref}>
+      <div className="page-content hidden-object">
+        <h3>🔍 Find the Hidden Items!</h3>
+        <p>Click on the highlighted areas to find 3 hidden objects</p>
+        <div className="game-image">
+          <img src="/photos/IMG_20160721_155806.jpg" alt="Game" onError={(e) => {
+            e.target.src = `https://picsum.photos/400/300?random=100`;
+          }} />
+          <div 
+            className={`hidden-item ${foundItems.includes('flower') ? 'found' : ''}`} 
+            style={{top: '20%', left: '30%'}} 
+            onClick={() => handleFindItem('flower')}
+            title="Click to find!"
+          ></div>
+          <div 
+            className={`hidden-item ${foundItems.includes('bird') ? 'found' : ''}`} 
+            style={{top: '60%', left: '70%'}} 
+            onClick={() => handleFindItem('bird')}
+            title="Click to find!"
+          ></div>
+          <div 
+            className={`hidden-item ${foundItems.includes('star') ? 'found' : ''}`} 
+            style={{top: '40%', left: '15%'}} 
+            onClick={() => handleFindItem('star')}
+            title="Click to find!"
+          ></div>
+        </div>
+        <p>Found: {foundItems.length}/3 items</p>
+        {foundItems.length === 3 && (
+          <p style={{color: '#4CAF50', fontWeight: 'bold'}}>🎉 Congratulations! You found them all!</p>
+        )}
+      </div>
+    </div>
+  );
+});
+
+const RevealPage = React.forwardRef((props: any, ref: any) => {
+  const [revealed, setRevealed] = useState(false);
+  
+  return (
+    <div className="page" ref={ref}>
+      <div className="page-content reveal-page">
+        <h3>🎁 Click to Reveal!</h3>
+        <div className="reveal-area" onClick={() => setRevealed(!revealed)}>
+          {revealed ? (
+            <div className="revealed-content">
+              <p>🎉 Surprise! You found the hidden message!</p>
+              <p>August 15th is truly a magical date!</p>
+            </div>
+          ) : (
+            <div className="hidden-content">
+              <p>Click here to reveal something special...</p>
+              <p>✨ Magic awaits!</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+const TimelinePage = React.forwardRef((props: any, ref: any) => {
+  const [selectedYear, setSelectedYear] = useState(null);
+  
+  const events = [
+    {year: 1945, event: "WWII ended in Pacific"},
+    {year: 1969, event: "Woodstock began"},
+    {year: 1977, event: "First SETI signal sent"},
+    {year: 1994, event: "World Wide Web Consortium founded"}
+  ];
+  
+  return (
+    <div className="page" ref={ref}>
+      <div className="page-content timeline">
+        <h3>📅 Interactive Timeline</h3>
+        <p>Click on any year to see what happened!</p>
+        {events.map(event => (
+          <div key={event.year} className="timeline-item" onClick={() => setSelectedYear(selectedYear === event.year ? null : event.year)}>
+            <span className="year">{event.year}</span>
+            {selectedYear === event.year && <span className="event">{event.event}</span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});
+
 function App() {
   return (
     <div className="App">
-      <h1>Bella's August 15th Photobook</h1>
+      <h1>August 15th Photobook</h1>
       <HTMLFlipBook 
         width={550}
         height={733}
@@ -91,11 +237,11 @@ function App() {
         swipeDistance={30}
         renderOnlyPageLengthChange={false}
       >
-        <PageCover>Bella's August 15th Journey</PageCover>
+        <PageCover>August 15th Journey</PageCover>
         
-        <TextPage title="Welcome to Bella's Story">
-          <p>On August 15th, 2025, Bella will celebrate her 10th birthday! This special day has been significant throughout history, and we've collected some amazing moments that happened on August 15th over the years.</p>
-          <p>Join us on a journey through time, exploring historical events that share Bella's special date.</p>
+        <TextPage title="Welcome to Our Story">
+          <p>August 15th is a special day that has been significant throughout history. We've collected some amazing moments that happened on this date over the years.</p>
+          <p>Join us on a journey through time, exploring historical events and beautiful memories that share this special date.</p>
         </TextPage>
 
         <FullPagePhoto 
@@ -115,7 +261,7 @@ function App() {
             { src: "/photos/IMG_20160813_152300.jpg", alt: "2016 Memory" }
           ]}
         >
-          The early years of Bella's life captured in these precious moments.
+          The early years captured in these precious moments.
         </PhotoGrid>
 
         <TextPage title="August 15th in History - Part 1">
@@ -124,6 +270,8 @@ function App() {
           <p><strong>1977:</strong> The first radio signal was sent to search for extraterrestrial life.</p>
           <p><strong>1994:</strong> The World Wide Web Consortium (W3C) was founded.</p>
         </TextPage>
+
+        <QuizPage />
 
         <FullPagePhoto 
           photoSrc="/photos/IMG_20191214_150438_Bokeh.jpg"
@@ -145,6 +293,8 @@ function App() {
           Summer adventures and seasonal changes captured through the years.
         </PhotoGrid>
 
+        <HiddenObjectPage />
+
         <TextPage title="August 15th in History - Part 2">
           <p><strong>2004:</strong> The Olympic Games opened in Athens, Greece.</p>
           <p><strong>2008:</strong> Michael Phelps won his 8th gold medal at the Beijing Olympics.</p>
@@ -160,6 +310,8 @@ function App() {
           Every August 15th brings its own special magic. This day connects us to history and to each other.
         </FullPagePhoto>
 
+        <RevealPage />
+
         <PhotoGrid 
           title="Family & Friends (2019-2020)"
           photos={[
@@ -171,6 +323,8 @@ function App() {
         >
           Family and friends make every day special. These photos show the love and connection that surrounds us.
         </PhotoGrid>
+
+        <TimelinePage />
 
         <TextPage title="August 15th in History - Part 3">
           <p><strong>2019:</strong> The first all-female spacewalk was completed.</p>
@@ -202,7 +356,7 @@ function App() {
         <TextPage title="August 15th in History - Part 4">
           <p><strong>2023:</strong> India's Chandrayaan-3 successfully landed on the moon.</p>
           <p><strong>2024:</strong> The Paris Olympics showcased human achievement and unity.</p>
-          <p><strong>2025:</strong> Bella's 10th birthday - a new chapter begins!</p>
+          <p><strong>2025:</strong> A new chapter begins with endless possibilities!</p>
           <p>Every year, August 15th continues to be a day of significance and celebration.</p>
         </TextPage>
 
@@ -211,7 +365,7 @@ function App() {
           title="Spring Awakening"
           alt="Spring beauty"
         >
-          Spring brings renewal and hope, just like each new birthday brings new possibilities.
+          Spring brings renewal and hope, just like each new day brings new possibilities.
         </FullPagePhoto>
 
         <PhotoGrid 
@@ -223,12 +377,12 @@ function App() {
             { src: "/photos/IMG_20240821_174329.jpg", alt: "Summer 2024" }
           ]}
         >
-          Recent memories show how much Bella has grown and how the world continues to change.
+          Recent memories show how much the world continues to change and grow.
         </PhotoGrid>
 
-        <TextPage title="Bella's Growth Journey">
-          <p>From her earliest days to now, Bella has grown in so many ways. Each photo captures a moment in time, a memory to cherish.</p>
-          <p>As we look at these images, we see not just a child growing up, but a person discovering the world and finding their place in it.</p>
+        <TextPage title="Growth Journey">
+          <p>From the earliest days to now, we've grown in so many ways. Each photo captures a moment in time, a memory to cherish.</p>
+          <p>As we look at these images, we see not just time passing, but life unfolding and discovering the world around us.</p>
         </TextPage>
 
         <FullPagePhoto 
@@ -236,7 +390,7 @@ function App() {
           title="Looking Forward"
           alt="Future possibilities"
         >
-          As we look toward Bella's 10th birthday in 2025, we celebrate all the possibilities that lie ahead.
+          As we look toward the future, we celebrate all the possibilities that lie ahead.
         </FullPagePhoto>
 
         <PhotoGrid 
@@ -253,7 +407,7 @@ function App() {
 
         <TextPage title="The Power of Memories">
           <p>Memories are like treasures we carry with us throughout our lives. They remind us of who we are, where we've been, and what matters most.</p>
-          <p>Bella's photobook is a collection of these treasures, each page telling a story of love, growth, and the beautiful journey of life.</p>
+          <p>This photobook is a collection of these treasures, each page telling a story of love, growth, and the beautiful journey of life.</p>
         </TextPage>
 
         <FullPagePhoto 
@@ -301,12 +455,12 @@ function App() {
           Family traditions create bonds that last a lifetime and memories that warm our hearts.
         </PhotoGrid>
 
-        <TextPage title="Looking Forward to 2025">
-          <p>As we look forward to Bella's 10th birthday on August 15th, 2025, we celebrate not just the day itself, but all the wonderful moments that have led us here.</p>
+        <TextPage title="Looking Forward">
+          <p>As we look forward to the future, we celebrate not just the days ahead, but all the wonderful moments that have led us here.</p>
           <p>Every photo tells a story, every memory is precious, and every August 15th brings new possibilities.</p>
         </TextPage>
 
-        <PageCover>Happy Birthday Bella!</PageCover>
+        <PageCover>The End</PageCover>
       </HTMLFlipBook>
     </div>
   );

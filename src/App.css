@@ -52,8 +52,10 @@
 .photo-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .photo-text {
@@ -107,13 +109,19 @@
   border-radius: 5px;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
 }
 
 .grid-photo img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .grid-text {
@@ -177,6 +185,194 @@
   box-shadow: inset 0px 0 30px 0px rgba(36, 10, 3, 0.5), 10px 0 8px 0px rgba(0, 0, 0, 0.4);
 }
 
+/* Interactive Elements Styles */
+
+/* Quiz Page */
+.quiz-page {
+  padding: 20px;
+  text-align: center;
+}
+
+.quiz-page h3 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.quiz-options button {
+  padding: 12px 20px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.quiz-options button:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.quiz-options button.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.quiz-result {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.quiz-result.correct {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.quiz-result.incorrect {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Hidden Object Game */
+.hidden-object {
+  padding: 15px;
+  text-align: center;
+}
+
+.game-image {
+  position: relative;
+  margin: 15px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.game-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hidden-item {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 0, 0.3);
+  border: 2px dashed #ff6b6b;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hidden-item:hover {
+  background: rgba(255, 255, 0, 0.6);
+  transform: scale(1.2);
+}
+
+.hidden-item.found {
+  background: rgba(76, 175, 80, 0.6);
+  border-color: #4CAF50;
+}
+
+/* Reveal Page */
+.reveal-page {
+  padding: 20px;
+  text-align: center;
+}
+
+.reveal-area {
+  margin: 20px 0;
+  padding: 30px;
+  border: 3px dashed #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal-area:hover {
+  border-color: #999;
+  background: #f9f9f9;
+}
+
+.hidden-content {
+  color: #666;
+  font-style: italic;
+}
+
+.revealed-content {
+  color: #333;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Timeline Page */
+.timeline {
+  padding: 20px;
+}
+
+.timeline h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.timeline-item:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.year {
+  font-weight: bold;
+  color: #333;
+  min-width: 60px;
+  margin-right: 15px;
+}
+
+.event {
+  color: #666;
+  font-style: italic;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .App {
@@ -213,5 +409,20 @@
   
   .text-content p {
     font-size: 0.8rem;
+  }
+  
+  .quiz-options button {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .year {
+    margin-right: 0;
+    margin-bottom: 5px;
   }
 }
