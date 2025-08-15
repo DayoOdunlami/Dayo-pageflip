@@ -214,11 +214,17 @@
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.3s ease;
+  min-height: 44px; /* Mobile touch target */
+  touch-action: manipulation;
 }
 
 .quiz-options button:hover {
   background: #f0f0f0;
   border-color: #999;
+}
+
+.quiz-options button:active {
+  transform: scale(0.98);
 }
 
 .quiz-options button.selected {
@@ -276,11 +282,20 @@
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 44px; /* Mobile touch target */
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hidden-item:hover {
   background: rgba(255, 255, 0, 0.6);
   transform: scale(1.2);
+}
+
+.hidden-item:active {
+  transform: scale(1.1);
 }
 
 .hidden-item.found {
@@ -305,11 +320,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 
 .reveal-area:hover {
   border-color: #999;
   background: #f9f9f9;
+}
+
+.reveal-area:active {
+  transform: scale(0.98);
 }
 
 .hidden-content {
@@ -348,11 +368,17 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 44px; /* Mobile touch target */
+  touch-action: manipulation;
 }
 
 .timeline-item:hover {
   background: #f0f0f0;
   border-color: #999;
+}
+
+.timeline-item:active {
+  transform: scale(0.98);
 }
 
 .year {
@@ -373,10 +399,102 @@
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* Responsive Design */
+/* Famous People Page */
+.famous-people {
+  padding: 20px;
+  text-align: center;
+}
+
+.famous-people h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.people-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.person-card {
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.person-card:hover {
+  border-color: #999;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.person-card.selected {
+  border-color: #4CAF50;
+  background: #f0f8f0;
+  transform: scale(1.02);
+}
+
+.person-card img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 8px;
+  border: 2px solid #ddd;
+}
+
+.person-card h4 {
+  margin: 0 0 5px 0;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.person-card .year {
+  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: bold;
+}
+
+.person-card .fact {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #555;
+  font-style: italic;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Mobile Navigation Hints */
+.mobile-hint {
+  display: none;
+  text-align: center;
+  color: #666;
+  font-size: 0.8rem;
+  margin: 10px 0;
+  font-style: italic;
+}
+
+/* Enhanced Mobile Responsive Design */
 @media (max-width: 768px) {
   .App {
     padding: 10px;
+  }
+  
+  .App h1 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
   }
   
   .page {
@@ -412,17 +530,151 @@
   }
   
   .quiz-options button {
-    padding: 10px 15px;
-    font-size: 0.8rem;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    margin: 5px 0;
   }
   
   .timeline-item {
     flex-direction: column;
     align-items: flex-start;
+    padding: 15px;
   }
   
   .year {
     margin-right: 0;
     margin-bottom: 5px;
+  }
+  
+  .hidden-item {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .reveal-area {
+    padding: 20px;
+    min-height: 120px;
+  }
+  
+  .mobile-hint {
+    display: block;
+  }
+  
+  /* Optimize for mobile touch */
+  .page-cover h2 {
+    font-size: 1.8rem;
+    padding-top: 40%;
+  }
+  
+  .grid-title {
+    font-size: 1rem;
+  }
+  
+  .quiz-page h3 {
+    font-size: 1.2rem;
+  }
+  
+  .timeline h3 {
+    font-size: 1.2rem;
+  }
+  
+  .hidden-object h3 {
+    font-size: 1.2rem;
+  }
+  
+  .reveal-page h3 {
+    font-size: 1.2rem;
+  }
+  
+  .famous-people h3 {
+    font-size: 1.2rem;
+  }
+  
+  .people-grid {
+    gap: 10px;
+  }
+  
+  .person-card {
+    padding: 10px;
+    min-height: 100px;
+  }
+  
+  .person-card img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .person-card h4 {
+    font-size: 0.8rem;
+  }
+  
+  .person-card .year {
+    font-size: 0.7rem;
+  }
+  
+  .person-card .fact {
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .App {
+    padding: 5px;
+  }
+  
+  .page {
+    padding: 10px;
+  }
+  
+  .text-page {
+    padding: 15px;
+  }
+  
+  .photo-text {
+    padding: 10px;
+  }
+  
+  .grid-container {
+    gap: 5px;
+  }
+  
+  .quiz-options button {
+    padding: 12px 15px;
+    font-size: 0.8rem;
+  }
+  
+  .page-cover h2 {
+    font-size: 1.5rem;
+    padding-top: 35%;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .App h1 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .page {
+    padding: 10px;
+  }
+  
+  .text-page {
+    padding: 15px;
+  }
+  
+  .photo-text {
+    padding: 10px;
+  }
+  
+  .grid-container {
+    max-height: 50%;
+  }
+  
+  .quiz-options button {
+    padding: 10px 15px;
+    font-size: 0.8rem;
   }
 }
