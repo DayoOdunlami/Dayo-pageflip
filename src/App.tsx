@@ -71,7 +71,8 @@ const QuizPage = React.forwardRef((props: any, ref: any) => {
   const [showResult, setShowResult] = useState(false);
   
   const handleAnswer = (answer: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent page turn
+    e.preventDefault();
+    e.stopPropagation();
     setSelectedAnswer(answer);
     setShowResult(true);
   };
@@ -83,19 +84,19 @@ const QuizPage = React.forwardRef((props: any, ref: any) => {
         <p>What happened on August 15th, 1945?</p>
         <div className="quiz-options">
           <button 
-            onClick={(e) => handleAnswer('a', e)}
+            onMouseDown={(e) => handleAnswer('a', e)}
             className={selectedAnswer === 'a' ? 'selected' : ''}
           >
             A) World War I ended
           </button>
           <button 
-            onClick={(e) => handleAnswer('b', e)}
+            onMouseDown={(e) => handleAnswer('b', e)}
             className={selectedAnswer === 'b' ? 'selected' : ''}
           >
             B) World War II ended in Pacific
           </button>
           <button 
-            onClick={(e) => handleAnswer('c', e)}
+            onMouseDown={(e) => handleAnswer('c', e)}
             className={selectedAnswer === 'c' ? 'selected' : ''}
           >
             C) Moon landing
@@ -115,7 +116,8 @@ const HiddenObjectPage = React.forwardRef((props: any, ref: any) => {
   const [foundItems, setFoundItems] = useState<string[]>([]);
   
   const handleFindItem = (item: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent page turn
+    e.preventDefault();
+    e.stopPropagation();
     if (!foundItems.includes(item)) {
       setFoundItems([...foundItems, item]);
     }
@@ -133,19 +135,19 @@ const HiddenObjectPage = React.forwardRef((props: any, ref: any) => {
           <div 
             className={`hidden-item ${foundItems.includes('flower') ? 'found' : ''}`} 
             style={{top: '20%', left: '30%'}} 
-            onClick={(e) => handleFindItem('flower', e)}
+            onMouseDown={(e) => handleFindItem('flower', e)}
             title="Click to find!"
           ></div>
           <div 
             className={`hidden-item ${foundItems.includes('bird') ? 'found' : ''}`} 
             style={{top: '60%', left: '70%'}} 
-            onClick={(e) => handleFindItem('bird', e)}
+            onMouseDown={(e) => handleFindItem('bird', e)}
             title="Click to find!"
           ></div>
           <div 
             className={`hidden-item ${foundItems.includes('star') ? 'found' : ''}`} 
             style={{top: '40%', left: '15%'}} 
-            onClick={(e) => handleFindItem('star', e)}
+            onMouseDown={(e) => handleFindItem('star', e)}
             title="Click to find!"
           ></div>
         </div>
@@ -162,7 +164,8 @@ const RevealPage = React.forwardRef((props: any, ref: any) => {
   const [revealed, setRevealed] = useState(false);
   
   const handleReveal = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent page turn
+    e.preventDefault();
+    e.stopPropagation();
     setRevealed(!revealed);
   };
   
@@ -170,7 +173,7 @@ const RevealPage = React.forwardRef((props: any, ref: any) => {
     <div className="page" ref={ref}>
       <div className="page-content reveal-page">
         <h3>🎁 Click to Reveal!</h3>
-        <div className="reveal-area" onClick={handleReveal}>
+        <div className="reveal-area" onMouseDown={handleReveal}>
           {revealed ? (
             <div className="revealed-content">
               <p>🎉 Surprise! You found the hidden message!</p>
@@ -199,7 +202,8 @@ const TimelinePage = React.forwardRef((props: any, ref: any) => {
   ];
   
   const handleYearClick = (year: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent page turn
+    e.preventDefault();
+    e.stopPropagation();
     setSelectedYear(selectedYear === year ? null : year);
   };
   
@@ -209,7 +213,7 @@ const TimelinePage = React.forwardRef((props: any, ref: any) => {
         <h3>📅 Interactive Timeline</h3>
         <p>Click on any year to see what happened!</p>
         {events.map(event => (
-          <div key={event.year} className="timeline-item" onClick={(e) => handleYearClick(event.year, e)}>
+          <div key={event.year} className="timeline-item" onMouseDown={(e) => handleYearClick(event.year, e)}>
             <span className="year">{event.year}</span>
             {selectedYear === event.year && <span className="event">{event.event}</span>}
           </div>
@@ -247,11 +251,36 @@ const FamousPeoplePage = React.forwardRef((props: any, ref: any) => {
       year: 1990,
       image: "https://picsum.photos/100/100?random=203",
       fact: "American actress"
+    },
+    {
+      name: "Alejandro González Iñárritu",
+      year: 1963,
+      image: "https://picsum.photos/100/100?random=204",
+      fact: "Mexican film director and producer"
+    },
+    {
+      name: "DeForest Kelley",
+      year: 1920,
+      image: "https://picsum.photos/100/100?random=205",
+      fact: "American actor (Dr. McCoy in Star Trek)"
+    },
+    {
+      name: "Rose Marie",
+      year: 1923,
+      image: "https://picsum.photos/100/100?random=206",
+      fact: "American actress and comedian"
+    },
+    {
+      name: "Mike Connors",
+      year: 1925,
+      image: "https://picsum.photos/100/100?random=207",
+      fact: "American actor (Mannix)"
     }
-  ];
+  ].sort((a, b) => a.year - b.year); // Sort by birth year
   
   const handlePersonClick = (name: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent page turn
+    e.preventDefault();
+    e.stopPropagation();
     setSelectedPerson(selectedPerson === name ? null : name);
   };
   
@@ -259,13 +288,13 @@ const FamousPeoplePage = React.forwardRef((props: any, ref: any) => {
     <div className="page" ref={ref}>
       <div className="page-content famous-people">
         <h3>🌟 Famous People Born on August 15th</h3>
-        <p>Click on any person to learn more!</p>
+        <p>Click on any person to learn more! (Chronological order)</p>
         <div className="people-grid">
           {famousPeople.map(person => (
             <div 
               key={person.name} 
               className={`person-card ${selectedPerson === person.name ? 'selected' : ''}`}
-              onClick={(e) => handlePersonClick(person.name, e)}
+              onMouseDown={(e) => handlePersonClick(person.name, e)}
             >
               <img src={person.image} alt={person.name} />
               <h4>{person.name}</h4>
