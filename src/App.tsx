@@ -70,33 +70,31 @@ const QuizPage = React.forwardRef((props: any, ref: any) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   
-  const handleAnswer = (answer: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleAnswer = (answer: string) => {
     setSelectedAnswer(answer);
     setShowResult(true);
   };
   
   return (
-    <div className="page" ref={ref}>
+    <div className="page" ref={ref} data-density="hard">
       <div className="page-content quiz-page">
         <h3>🎯 History Quiz!</h3>
         <p>What happened on August 15th, 1945?</p>
         <div className="quiz-options">
           <button 
-            onMouseDown={(e) => handleAnswer('a', e)}
+            onClick={() => handleAnswer('a')}
             className={selectedAnswer === 'a' ? 'selected' : ''}
           >
             A) World War I ended
           </button>
           <button 
-            onMouseDown={(e) => handleAnswer('b', e)}
+            onClick={() => handleAnswer('b')}
             className={selectedAnswer === 'b' ? 'selected' : ''}
           >
             B) World War II ended in Pacific
           </button>
           <button 
-            onMouseDown={(e) => handleAnswer('c', e)}
+            onClick={() => handleAnswer('c')}
             className={selectedAnswer === 'c' ? 'selected' : ''}
           >
             C) Moon landing
@@ -115,16 +113,14 @@ const QuizPage = React.forwardRef((props: any, ref: any) => {
 const HiddenObjectPage = React.forwardRef((props: any, ref: any) => {
   const [foundItems, setFoundItems] = useState<string[]>([]);
   
-  const handleFindItem = (item: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleFindItem = (item: string) => {
     if (!foundItems.includes(item)) {
       setFoundItems([...foundItems, item]);
     }
   };
   
   return (
-    <div className="page" ref={ref}>
+    <div className="page" ref={ref} data-density="hard">
       <div className="page-content hidden-object">
         <h3>🔍 Find the Hidden Items!</h3>
         <p>Click on the highlighted areas to find 3 hidden objects</p>
@@ -135,19 +131,19 @@ const HiddenObjectPage = React.forwardRef((props: any, ref: any) => {
           <div 
             className={`hidden-item ${foundItems.includes('flower') ? 'found' : ''}`} 
             style={{top: '20%', left: '30%'}} 
-            onMouseDown={(e) => handleFindItem('flower', e)}
+            onClick={() => handleFindItem('flower')}
             title="Click to find!"
           ></div>
           <div 
             className={`hidden-item ${foundItems.includes('bird') ? 'found' : ''}`} 
             style={{top: '60%', left: '70%'}} 
-            onMouseDown={(e) => handleFindItem('bird', e)}
+            onClick={() => handleFindItem('bird')}
             title="Click to find!"
           ></div>
           <div 
             className={`hidden-item ${foundItems.includes('star') ? 'found' : ''}`} 
             style={{top: '40%', left: '15%'}} 
-            onMouseDown={(e) => handleFindItem('star', e)}
+            onClick={() => handleFindItem('star')}
             title="Click to find!"
           ></div>
         </div>
@@ -163,17 +159,11 @@ const HiddenObjectPage = React.forwardRef((props: any, ref: any) => {
 const RevealPage = React.forwardRef((props: any, ref: any) => {
   const [revealed, setRevealed] = useState(false);
   
-  const handleReveal = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setRevealed(!revealed);
-  };
-  
   return (
-    <div className="page" ref={ref}>
+    <div className="page" ref={ref} data-density="hard">
       <div className="page-content reveal-page">
         <h3>🎁 Click to Reveal!</h3>
-        <div className="reveal-area" onMouseDown={handleReveal}>
+        <div className="reveal-area" onClick={() => setRevealed(!revealed)}>
           {revealed ? (
             <div className="revealed-content">
               <p>🎉 Surprise! You found the hidden message!</p>
@@ -201,19 +191,13 @@ const TimelinePage = React.forwardRef((props: any, ref: any) => {
     {year: 1994, event: "World Wide Web Consortium founded"}
   ];
   
-  const handleYearClick = (year: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedYear(selectedYear === year ? null : year);
-  };
-  
   return (
-    <div className="page" ref={ref}>
+    <div className="page" ref={ref} data-density="hard">
       <div className="page-content timeline">
         <h3>📅 Interactive Timeline</h3>
         <p>Click on any year to see what happened!</p>
         {events.map(event => (
-          <div key={event.year} className="timeline-item" onMouseDown={(e) => handleYearClick(event.year, e)}>
+          <div key={event.year} className="timeline-item" onClick={() => setSelectedYear(selectedYear === event.year ? null : event.year)}>
             <span className="year">{event.year}</span>
             {selectedYear === event.year && <span className="event">{event.event}</span>}
           </div>
@@ -223,88 +207,97 @@ const TimelinePage = React.forwardRef((props: any, ref: any) => {
   );
 });
 
-// Famous People Page
+// Famous People Matching Game
 const FamousPeoplePage = React.forwardRef((props: any, ref: any) => {
-  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
+  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [matches, setMatches] = useState<string[]>([]);
+  const [score, setScore] = useState(0);
   
   const famousPeople = [
-    {
-      name: "Napoleon Bonaparte",
-      year: 1769,
-      image: "https://picsum.photos/100/100?random=200",
-      fact: "French military leader and emperor"
-    },
-    {
-      name: "Julia Child",
-      year: 1912,
-      image: "https://picsum.photos/100/100?random=201", 
-      fact: "American chef and TV personality"
-    },
-    {
-      name: "Ben Affleck",
-      year: 1972,
-      image: "https://picsum.photos/100/100?random=202",
-      fact: "American actor and filmmaker"
-    },
-    {
-      name: "Jennifer Lawrence",
-      year: 1990,
-      image: "https://picsum.photos/100/100?random=203",
-      fact: "American actress"
-    },
-    {
-      name: "Alejandro González Iñárritu",
-      year: 1963,
-      image: "https://picsum.photos/100/100?random=204",
-      fact: "Mexican film director and producer"
-    },
-    {
-      name: "DeForest Kelley",
-      year: 1920,
-      image: "https://picsum.photos/100/100?random=205",
-      fact: "American actor (Dr. McCoy in Star Trek)"
-    },
-    {
-      name: "Rose Marie",
-      year: 1923,
-      image: "https://picsum.photos/100/100?random=206",
-      fact: "American actress and comedian"
-    },
-    {
-      name: "Mike Connors",
-      year: 1925,
-      image: "https://picsum.photos/100/100?random=207",
-      fact: "American actor (Mannix)"
-    }
-  ].sort((a, b) => a.year - b.year); // Sort by birth year
+    { name: "Napoleon Bonaparte", year: 1769 },
+    { name: "Julia Child", year: 1912 },
+    { name: "Ben Affleck", year: 1972 },
+    { name: "Jennifer Lawrence", year: 1990 }
+  ];
   
-  const handlePersonClick = (name: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSelectedPerson(selectedPerson === name ? null : name);
+  const years = [1769, 1912, 1972, 1990];
+  
+  const handleNameClick = (name: string) => {
+    if (selectedName === name) {
+      setSelectedName(null);
+    } else {
+      setSelectedName(name);
+    }
+    setSelectedYear(null);
   };
   
+  const handleYearClick = (year: number) => {
+    if (selectedYear === year) {
+      setSelectedYear(null);
+    } else {
+      setSelectedYear(year);
+    }
+  };
+  
+  // Check for matches
+  React.useEffect(() => {
+    if (selectedName && selectedYear) {
+      const person = famousPeople.find(p => p.name === selectedName);
+      if (person && person.year === selectedYear) {
+        // Correct match!
+        if (!matches.includes(selectedName)) {
+          setMatches([...matches, selectedName]);
+          setScore(score + 1);
+        }
+      }
+      // Reset selections after a short delay
+      setTimeout(() => {
+        setSelectedName(null);
+        setSelectedYear(null);
+      }, 1000);
+    }
+  }, [selectedName, selectedYear, matches, score]);
+  
   return (
-    <div className="page" ref={ref}>
+    <div className="page" ref={ref} data-density="hard">
       <div className="page-content famous-people">
-        <h3>🌟 Famous People Born on August 15th</h3>
-        <p>Click on any person to learn more! (Chronological order)</p>
-        <div className="people-grid">
-          {famousPeople.map(person => (
-            <div 
-              key={person.name} 
-              className={`person-card ${selectedPerson === person.name ? 'selected' : ''}`}
-              onMouseDown={(e) => handlePersonClick(person.name, e)}
-            >
-              <img src={person.image} alt={person.name} />
-              <h4>{person.name}</h4>
-              <p className="year">{person.year}</p>
-              {selectedPerson === person.name && (
-                <p className="fact">{person.fact}</p>
-              )}
-            </div>
-          ))}
+        <h3>🌟 Famous People Matching Game</h3>
+        <p>Match the person to their birth year! Score: {score}/4</p>
+        
+        <div className="matching-game">
+          <div className="names-section">
+            <h4>Famous People</h4>
+            {famousPeople.map(person => (
+              <div 
+                key={person.name}
+                className={`name-card ${selectedName === person.name ? 'selected' : ''} ${matches.includes(person.name) ? 'matched' : ''}`}
+                onClick={() => handleNameClick(person.name)}
+              >
+                {person.name}
+              </div>
+            ))}
+          </div>
+          
+          <div className="years-section">
+            <h4>Birth Years</h4>
+            {years.map(year => (
+              <div 
+                key={year}
+                className={`year-card ${selectedYear === year ? 'selected' : ''} ${matches.some(name => famousPeople.find(p => p.name === name)?.year === year) ? 'matched' : ''}`}
+                onClick={() => handleYearClick(year)}
+              >
+                {year}
+              </div>
+            ))}
+          </div>
         </div>
+        
+        {score === 4 && (
+          <div className="game-complete">
+            <p>🎉 Congratulations! You matched them all correctly!</p>
+          </div>
+        )}
       </div>
     </div>
   );
